@@ -1,0 +1,11 @@
+---
+services:
+  chrony:
+    image: nlp0/chrony:latest
+    restart: always
+    environment: 
+      NTP_TYPE_SERVER: "server ntp.ix.ru"
+    ports:
+     - 123:123/udp
+
+

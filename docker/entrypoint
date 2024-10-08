@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ -n "${NTP_TYPE_SERVER}" ]; then
+ sed -i "s/^pool pool.ntp.org/${NTP_TYPE_SERVER}/" /etc/chrony/chrony.conf
+fi
+
+sed -i "/^initstepslew/d" /etc/chrony/chrony.conf
+echo "allow 0.0.0.0/0" >> /etc/chrony/chrony.conf
+chronyd -u chrony -d -x
+
