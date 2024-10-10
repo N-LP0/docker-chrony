@@ -30,7 +30,6 @@ pool 0.pool.ntp.org iburst
 pool 1.pool.ntp.org iburst
 pool 2.pool.ntp.org iburst
 pool 3.pool.ntp.org iburst
-initstepslew 10 pool.ntp.org
 driftfile /var/lib/chrony/chrony.drift
 rtcsync
 cmdport 0
