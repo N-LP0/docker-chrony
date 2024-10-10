@@ -8,7 +8,7 @@
 docker run -d --restart unless-stopped \
 -e NTP_SERVERS="ntp0.ntp-servers.net, ntp1.ntp-servers.net, ntp2.ntp-servers.net" \
 -e NTP_POOLS="0.pool.ntp.org, 1.pool.ntp.org, 2.pool.ntp.org, 3.pool.ntp.org" \
--e ALLOW_CIDR="192.168.0/24, 10.10.0/24" \
+-e ALLOW_CIDR="192.168.0.0/24, 10.10.0.0/24" \ \
 nlp0/chrony:latest
 ```
 
@@ -34,6 +34,6 @@ initstepslew 10 pool.ntp.org
 driftfile /var/lib/chrony/chrony.drift
 rtcsync
 cmdport 0
-allow 192.168.0/24
-allow 10.10.0/24
+allow 192.168.0.0/24
+allow 10.10.0.0/24
 ```
