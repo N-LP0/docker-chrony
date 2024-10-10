@@ -1,10 +1,42 @@
 #!/bin/sh
 
-if [ -n "${NTP_TYPE_SERVER}" ]; then
- sed -i "s/^pool pool.ntp.org/${NTP_TYPE_SERVER}/" /etc/chrony/chrony.conf
+CHRONY_CONF="/etc/chrony/chrony.conf"
+
+if [ -n "${NTP_SERVERS}" ]; then
+  SERVERS=$(echo ${NTP_SERVERS} | tr -d ' ' | sed -e 's/,/ /g')
+  sed -i "s/.*iburst/server $(echo ${SERVERS%% *}) iburst/" ${CHRONY_CONF}
+  for ntp in ${SERVERS#* }; do
+    LAST_LINE=$(grep -n "iburst" ${CHRONY_CONF} | tail -1 | cut -d: -f1)
+    sed -i "${LAST_LINE}a server ${ntp} iburst" ${CHRONY_CONF}
+  done
 fi
 
-sed -i "/^initstepslew/d" /etc/chrony/chrony.conf
-echo "allow 0.0.0.0/0" >> /etc/chrony/chrony.conf
-chronyd -u chrony -d -x
+if [ -n "${NTP_POOLS}" ]; then
+  POOLS=$(echo ${NTP_POOLS} | tr -d ' ' | sed -e 's/,/ /g')
+  if [ -z "${NTP_SERVERS}" ]; then
+    sed -i "s/.*iburst/pool $(echo ${POOLS%% *}) iburst/" ${CHRONY_CONF}
+    for pool in ${POOLS#* }; do
+      LAST_LINE=$(grep -n "iburst" ${CHRONY_CONF} | tail -1 | cut -d: -f1)
+      sed -i "${LAST_LINE}a pool ${pool} iburst" ${CHRONY_CONF}
+    done
+  else
+    for pool in ${POOLS}; do
+      LAST_LINE=$(grep -n "iburst" ${CHRONY_CONF} | tail -1 | cut -d: -f1)
+      sed -i "${LAST_LINE}a pool ${pool} iburst" ${CHRONY_CONF}
+    done
+  fi
+fi
 
+if [ -n "${ALLOW_CIDR}" ]; then
+  CIDR=$(echo ${ALLOW_CIDR} | tr -d ' ' | sed -e 's/,/ /g')
+  for cidr in ${CIDR}; do
+    echo "allow ${cidr}" >> ${CHRONY_CONF}
+  done
+else
+  echo "allow 0.0.0.0/0" >> ${CHRONY_CONF}
+fi
+
+sed -i "/^initstepslew/d" ${CHRONY_CONF}
+
+chronyd -u chrony -d -x
+exec "$@"
