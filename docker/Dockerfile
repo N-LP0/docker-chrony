@@ -1,9 +1,14 @@
-FROM alpine:3.20.3
+FROM alpine:latest
 
 COPY entrypoint /usr/local/bin/
-RUN apk add --update --no-cache chrony &&\
-chmod u+x /usr/local/bin/entrypoint
+RUN set -eux; \
+  apk add --update --no-cache \
+  chrony \
+  sudo;\
+  chmod a+x /usr/local/bin/entrypoint; \
+  sed -i '/# %sudo/c chrony ALL=(ALL:ALL) NOPASSWD: /usr/sbin/chronyd' /etc/sudoers;
 
+USER chrony
 EXPOSE 123/udp
 
 ENTRYPOINT [ "entrypoint" ]

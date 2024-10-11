@@ -38,5 +38,5 @@ fi
 
 sed -i "/^initstepslew/d" ${CHRONY_CONF}
 
-chronyd -u chrony -d -x
+sudo /usr/sbin/chronyd -u chrony -d -x
 exec "$@"
