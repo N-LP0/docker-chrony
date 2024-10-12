@@ -1,0 +1,5 @@
+#!/bin/sh
+
+date "+%Y-%m-%d %H:%M:%S"
+sed -n 's/^PRETTY_NAME=//p' /etc/os-release | tr -d \"
+echo $(/usr/sbin/chronyd -v | awk '{print $1, $2, $3, $4}')
