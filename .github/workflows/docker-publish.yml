@@ -11,7 +11,7 @@ env:
   REGISTRY: docker.io
   IMAGE_NAME: docker.io/nlp0/chrony:latest
   VER_LOG: version.txt
-  
+
 jobs:
   push:
     name: Publish to docker hub registry
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check version
         run: |
-          docker run -i --rm  --entrypoint versions ${{ env.IMAGE_NAME }} >> ${{ env.VER_LOG }}
+          docker run -i --rm  --entrypoint versions ${{ env.IMAGE_NAME }} > ${{ env.VER_LOG }}
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
