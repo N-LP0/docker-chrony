@@ -14,7 +14,7 @@ env:
   
 jobs:
   push:
-    name: Publish to github registry
+    name: Publish to docker hub registry
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
