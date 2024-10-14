@@ -51,6 +51,6 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           author_name: N-LP0
-          author_email: ${{ secrets.author_email }}
+          author_email: ${{ secrets.author_email.AUTHOR_EMAIL }}
           message: "upd"
           add: "version*"
